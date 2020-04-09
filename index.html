@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>See the weather forecast in console.</h2>
+    <script>
+        getWeatherForeCast = async cities => {
+            const requests = cities.map((city) => {
+                return fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city.locationName}&units=metric&apikey=472bcaa2e7b5b37a51c63a99921754f0`)
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        let utcString = new Date(data.dt * 1000).toUTCString();
+                        const result ={currentTime: utcString.slice(-11, -4), weather: data.weather[0].description};
+                        return result;
+                    })
+            });
+            return Promise.all(requests);
+        }
+        const cities = [{ locationName: "New York", postalCode: 10005 }, { locationName: "tokyo", postalCode: "100-0004" }, { locationName: "São Paulo", postalCode: "01000-000" }, { locationName: "Pluto", postalCode: 4800 }];
+        getWeatherForeCast(cities).then((results) => {
+            console.log('forCast-details', results);
+        });
+    </script>
+</body>
+</html>
